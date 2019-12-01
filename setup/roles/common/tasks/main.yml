@@ -1,0 +1,33 @@
+---
+
+- name: Update apt repo
+  become: yes
+  apt:
+    update-cache: yes
+
+- name: install system packages
+  become: yes
+  apt:
+    name: [
+      'apt-transport-https',
+      'jq', 
+      'ntp', 
+      'sudo', 
+      'unattended-upgrades', 
+      'unzip'
+    ]
+    state: present
+
+- name: Set hostname
+  become: yes
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Update unattended-upgrades config
+  become: yes
+  copy:
+    src: 20auto-upgrades
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: 0644

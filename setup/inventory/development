@@ -1,0 +1,17 @@
+[masters]
+k8s-master-1 ansible_ssh_host=k8s-master-1
+
+[nodes]
+k8s-node-1 ansible_ssh_host=k8s-node-1
+k8s-node-2 ansible_ssh_host=k8s-node-2
+
+[k8s:children]
+masters
+nodes
+
+[k8s:vars]
+ansible_ssh_user=nav
+ansible_ssh_port=22
+ansible_ssh_private_key_file=~/.ssh/id_rsa
+ansible_python_interpreter=/usr/bin/python3
+environment=development

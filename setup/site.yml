@@ -1,0 +1,16 @@
+---
+
+- name: Setup control plane
+  hosts: masters
+  roles:
+    - common
+    - docker
+    - kubernetes
+
+
+- name: Setup nodes
+  hosts: nodes
+  roles:
+    - common
+    - docker
+    - kubernetes

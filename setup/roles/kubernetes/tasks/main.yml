@@ -1,0 +1,45 @@
+---
+
+- name: Update apt repo
+  become: yes
+  apt:
+    update-cache: yes
+
+- name: Disable SWAP since kubernetes can't work with swap enabled (1/2)
+  become: yes
+  shell: swapoff -a
+
+- name: Disable SWAP in fstab since kubernetes can't work with swap enabled (2/2)
+  become: yes
+  replace:
+    path: /etc/fstab
+    regexp: '^([^#].*?\sswap\s+sw\s+.*)$'
+    replace: '# \1'
+
+- name: Install kubernetes packages
+  become: yes
+  apt:
+    name: [
+      'apt-transport-https',
+      'curl', 
+    ]
+    state: present
+
+- name: Add apt key for google
+  become: yes
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: Add Kubernetes repository
+  become: yes
+  apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+
+- name: Install Kubernetes
+  become: yes
+  apt:
+    name: ['kubeadm', 'kubelet', 'kubectl']
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600

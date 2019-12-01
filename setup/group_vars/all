@@ -1,0 +1,7 @@
+---
+binary_path: /usr/local/bin
+docker_compose_version: 1.24.1
+
+user: nav
+group: nav
+home: /home/nav
