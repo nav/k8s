@@ -99,7 +99,7 @@ helm repo update
 ### Install Prometheus
 
 ``` shell
-kubectl create namespace monitorying
+kubectl create namespace monitoring
 
 helm install -f deploy/kubernetes/prometheus/prometheus.yaml \
   my-prometheus stable/prometheus \
