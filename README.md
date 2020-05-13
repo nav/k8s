@@ -73,10 +73,36 @@ data:
 
 Actuall config is contained in `deploy/kubernetes/loadbalancer.yaml` file.
 
-## Application specific
+### Application specific
 
 To deploy application along with necessary LoadBalancer and Ingress-controller run
 
 ```shell
-kustomize build | kc apploy -f -
+kustomize build deploy/kubernetes | kc apply -f -
 ```
+
+
+## Helm setup
+
+Helm is a package manager for Kubernetes. To install Helm on MacOS run:
+
+`brew install helm`
+
+You will need to run a few more commands to make it useful.
+
+```shell
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo update
+```
+
+
+### Install Prometheus
+
+``` shell
+kubectl create namespace monitorying
+
+helm install -f deploy/kubernetes/prometheus/prometheus.yaml \
+  my-prometheus stable/prometheus \
+  --namespace monitoring
+```
+

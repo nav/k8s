@@ -1,0 +1,30 @@
+---
+rbac:
+  create: false
+
+pushgateway:
+  persistentVolume:
+    enabled: false
+
+alertmanager:
+  enabled: false
+
+server:
+  persistentVolume:
+    enabled: false
+
+  service:
+    type: LoadBalancer
+
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: prometheus
+        static_configs:
+          - targets:
+            - localhost:9090
+      - job_name: helloworld
+        metrics_path: /metrics
+        static_configs:
+          - targets:
+              - helloworld-service.helloworld.svc.cluster.local:80
