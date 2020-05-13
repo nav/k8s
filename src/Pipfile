@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 fastapi = "*"
+prometheus_client = "*"
 uvicorn = "*"
 
 [dev-packages]

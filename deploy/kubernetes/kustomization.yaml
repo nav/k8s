@@ -1,0 +1,5 @@
+---
+resources:
+- loadbalancer.yaml
+- ingress-nginx.yaml
+- application.yaml

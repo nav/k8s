@@ -14,6 +14,15 @@ An exercise to learn Kubernetes cluster deployment on a bare-metal server. This 
 
  - Remove existing machine id from `/etc/machine-id` and recreate a new one using `sudo systemd-machine-id-setup`
 
+## Ansible setup
+
+Once the VMs are ready, run ansible playbook to install Docker and a few other tools.
+
+For me, the following command works:
+
+```shell
+ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -i inventory/development site.yml --ask-become-pass
+```
 
 ## Kubernetes setup
 
@@ -30,10 +39,9 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 Deploy a pod network
 `kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/2140ac876ef134e0ed5af15c65e414cf26827915/Documentation/kube-flannel.yml`
 
-To join the cluster, run the following on all nodes
+To join the cluster, copy the command from the output of above command and run it on all nodes.
 
-`sudo kubeadm join k8s-master-1:6443 --token xxx \
-    --discovery-token-ca-cert-hash sha256:869cfa9319b3d569ce3e63295fffc1abdf0944b38870a22477e242218cf5ff77`
+`sudo kubeadm join k8s-master-1:6443 --token xxx --discovery-token-ca-cert-hash sha256:xxx`
 
 ### Load balancer
 
@@ -41,7 +49,7 @@ Setting up ingress controller is little different on bare metal than deploying o
 
 **Install MetalLB**
 
-`kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.8.3/manifests/metallb.yaml`
+`kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml`
 
 **Usage**
 
@@ -61,4 +69,14 @@ data:
       protocol: layer2
       addresses:
       - 10.1.1.116-10.1.1.120
+```
+
+Actuall config is contained in `deploy/kubernetes/loadbalancer.yaml` file.
+
+## Application specific
+
+To deploy application along with necessary LoadBalancer and Ingress-controller run
+
+```shell
+kustomize build | kc apploy -f -
 ```
