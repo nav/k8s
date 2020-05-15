@@ -49,7 +49,11 @@ Setting up ingress controller is little different on bare metal than deploying o
 
 **Install MetalLB**
 
-`kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml`
+``` shell
+kubectl create namespace metallb-system
+kubectl apply -f https://raw.githubusercontent.com/google/metallb/v0.9.3/manifests/metallb.yaml
+kubectl create secret generic -n metallb-system memberlist --from-literal=secretkey="$(openssl rand -base64 128)"
+```
 
 **Usage**
 
@@ -71,7 +75,7 @@ data:
       - 10.1.1.116-10.1.1.120
 ```
 
-Actuall config is contained in `deploy/kubernetes/loadbalancer.yaml` file.
+Actual config is contained in `deploy/kubernetes/loadbalancer.yaml` file.
 
 ### Application specific
 
@@ -102,7 +106,14 @@ helm repo update
 kubectl create namespace monitoring
 
 helm install -f deploy/kubernetes/prometheus/prometheus.yaml \
-  my-prometheus stable/prometheus \
+  prometheus-release stable/prometheus-operator \
   --namespace monitoring
 ```
 
+To update Prometheus after making any changes run:
+
+``` shell
+helm upgrade -f deploy/kubernetes/prometheus/values.yaml \
+  prometheus-release stable/prometheus-operator \
+  --namespace monitoring
+```

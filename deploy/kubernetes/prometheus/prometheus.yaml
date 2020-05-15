@@ -1,35 +1,22 @@
 ---
-rbac:
-  create: false
-
-pushgateway:
-  persistentVolume:
-    enabled: false
-
-alertmanager:
-  enabled: false
-
-server:
-  ingress:
-    enabled: true
-    hosts:
-      - prometheus.example.com
-  
-  persistentVolume:
-    enabled: false
-
+grafana:
   service:
     type: LoadBalancer
 
-serverFiles:
-  prometheus.yml:
-    scrape_configs:
-      - job_name: prometheus
-        static_configs:
-          - targets:
-            - localhost:9090
-      - job_name: helloworld
-        metrics_path: /metrics
-        static_configs:
-          - targets:
-              - helloworld-service.helloworld.svc.cluster.local:80
+  ingress:
+    enabled: true
+    hosts:
+    - grafana.k8s.milkyway.home.navaulakh.com
+
+prometheus:
+  service:
+    type: LoadBalancer
+    
+  ingress:
+    enabled: true
+    hosts:
+    - prometheus.k8s.milkyway.home.navaulakh.com
+
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+  
