@@ -113,7 +113,7 @@ helm install -f deploy/kubernetes/prometheus/prometheus.yaml \
 To update Prometheus after making any changes run:
 
 ``` shell
-helm upgrade -f deploy/kubernetes/prometheus/values.yaml \
+helm upgrade -f deploy/kubernetes/prometheus/prometheus.yaml \
   prometheus-release stable/prometheus-operator \
   --namespace monitoring
 ```
